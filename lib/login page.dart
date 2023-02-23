@@ -3,24 +3,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:login_page/auth_service.dart';
 import 'package:login_page/next%20page.dart';
 
-
 class MyWidget extends StatelessWidget {
   const MyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
+        // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
         icon: const FaIcon(FontAwesomeIcons.hammer),
         color: Colors.grey[700],
-
-        onPressed: () {
-
-        }
-    );
+        onPressed: () {});
   }
 }
-
 
 class LOGINPAGE extends StatefulWidget {
   const LOGINPAGE({Key? key}) : super(key: key);
@@ -32,7 +26,8 @@ class LOGINPAGE extends StatefulWidget {
 class _LOGINPAGEState extends State<LOGINPAGE> {
   final _formKey = GlobalKey<FormState>();
   final _emailaddress = TextEditingController();
-  var _password = TextEditingController();
+  final _password = TextEditingController();
+  final _fullname= TextEditingController();
 
   String email = '';
   String password = '';
@@ -54,51 +49,45 @@ class _LOGINPAGEState extends State<LOGINPAGE> {
             const MyWidget(),
             ListTile(
               title: TextFormField(
-          keyboardType: TextInputType.emailAddress,
-          controller: _emailaddress,
-          decoration: InputDecoration(
-              hintText: "Enter email address",
-              icon: const Icon(Icons.mail_outlined),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                borderSide: const BorderSide(),
-              ),
-          ),
-          validator: (value) {
-              if (value!.isEmpty ||
-                  !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                      .hasMatch(value)) {
-                return 'Enter a valid email!';
-              }
-              return null;
-
-          },
-              onSaved: (value){
-            setState(() {
-              email = value!;
-            });
-              },),
-            ),
-            ListTile(
-              title: TextFormField(
                 keyboardType: TextInputType.emailAddress,
-                controller: _password,
-                obscureText:  true,
+                controller: _emailaddress,
                 decoration: InputDecoration(
-                  hintText: "Enter user pasword",
-                    icon: const Icon(FontAwesomeIcons.lock),
+                  hintText: "Enter email address",
+                  icon: const Icon(Icons.mail_outlined),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: const BorderSide(),
                   ),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter user password';
+                  if (value!.isEmpty ||
+                      !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(value)) {
+                    return 'Enter a valid email!';
                   }
                   return null;
                 },
-                onSaved: (value){
+                onSaved: (value) {
+                  setState(() {
+                    email = value!;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              title: TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                controller: _password,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: "Enter user pasword",
+                  icon: const Icon(FontAwesomeIcons.lock),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(),
+                  ),
+                ),
+                onSaved: (value) {
                   setState(() {
                     password = value!;
                   });
@@ -106,12 +95,43 @@ class _LOGINPAGEState extends State<LOGINPAGE> {
               ),
             ),
             ListTile(
-              title: TextButton(onPressed: (){
-                var route = MaterialPageRoute(
-                    builder: (context) =>  NEXTPAGE( value: _emailaddress.text));
-                Navigator.of(context).push(route);
-                }, child: Text('fogot pasword?',style: TextStyle(color: Colors.black),)),
+              title: TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                controller: _fullname,
+                decoration: InputDecoration(
+                  hintText: "Enter user Name",
+                  icon: const Icon(FontAwesomeIcons.person),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter user name';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  setState(() {
+                    fullname = value!;
+                  });
+                },
+              ),
             ),
+            // ListTile(
+            //   title: TextButton(
+            //       onPressed: () {
+            //         var route = MaterialPageRoute(
+            //             builder: (context) =>
+            //                 NEXTPAGE(value: _emailaddress.text));
+            //         Navigator.of(context).push(route);
+            //       },
+            //       child: const Text(
+            //         'fogot pasword?',
+            //         style: TextStyle(color: Colors.black),
+            //       )),
+            // ),
             ListTile(
               title: Container(
                 height: 55,
@@ -122,22 +142,23 @@ class _LOGINPAGEState extends State<LOGINPAGE> {
                         _formKey.currentState!.save();
                         login
                             ? AuthServices.signinUser(email, password, context)
-                            : AuthServices.signupUser(
-                            email, password, fullname, context);
+                            : AuthServices.signupUser(email, password, fullname, context);
                       }
                     },
                     child: Text(login ? 'Login' : 'Signup')),
-              ), ),
-              ListTile(
-                title: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        login = !login;
-                      });
-                    },
-                    child: Text(login
-                        ? "Don't have an account? Signup"
-                        : "Already have an account? Login")),)
+              ),
+            ),
+            ListTile(
+              title: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      login = !login;
+                    });
+                  },
+                  child: Text(login
+                      ? "Don't have an account? Signup"
+                      : "Already have an account? Login")),
+            )
           ],
         ),
       ),
